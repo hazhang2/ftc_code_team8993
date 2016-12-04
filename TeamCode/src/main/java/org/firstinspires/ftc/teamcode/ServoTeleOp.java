@@ -42,8 +42,8 @@ public class ServoTeleOp extends LinearOpMode {
     HardwareServo robot           = new HardwareServo();
 
     // double          clawOffset      = 0;
-    public static final double    ARM_EXTENDED_POSITION       = 0.08 ;
-    public static final double    ARM_RETRACTED_POSITION      = 0.02 ;
+    public static final double    BALL_PUSHER_POSITION_HIGH       = 0.4 ;
+    public static final double    BALL_PUSHER_POSITION_LOW      = 0. ;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -63,19 +63,19 @@ public class ServoTeleOp extends LinearOpMode {
 
             if(gamepad1.a)
             {
-                robot.rotatingServo.setPosition(ARM_RETRACTED_POSITION);
+                robot.rotatingServo.setPosition(BALL_PUSHER_POSITION_LOW);
             }
             if(gamepad1.b)
             {
-                robot.rotatingServo.setPosition(ARM_EXTENDED_POSITION);
+                robot.rotatingServo.setPosition(BALL_PUSHER_POSITION_HIGH);
             }
-            rightMotorPower = 0;
-            leftMotorPower  = 0;
+//            rightMotorPower = 0;
+//            leftMotorPower  = 0;
             // rightShooterPower = -gamepad1.right_stick_y;
             // leftShooterPower = -gamepad1.left_stick_y;
 
-                robot.leftMotor.setPower(leftMotorPower);
-                robot.rightMotor.setPower(rightMotorPower);
+//                robot.leftMotor.setPower(leftMotorPower);
+//                robot.rightMotor.setPower(rightMotorPower);
                 // robot.rightShooter.setPower(rightShooterPower);
                 // robot.leftShooter.setPower(leftShooterPower);
 

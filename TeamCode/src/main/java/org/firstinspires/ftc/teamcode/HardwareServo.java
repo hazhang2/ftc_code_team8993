@@ -44,7 +44,7 @@ public class HardwareServo
         rightMotor.setPower(0);
         // leftShooter.setPower(0);
         // rightShooter.setPower(0);
-        rotatingServo.setPosition(0.2);
+        rotatingServo.setPosition(0.);
 
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

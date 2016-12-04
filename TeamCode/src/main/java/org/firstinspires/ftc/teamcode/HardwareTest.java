@@ -35,8 +35,8 @@ public class HardwareTest
         // rotatingServo = hwMap.servo.get("servo_1");
 
 
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        rightMotor.setDirection(DcMotor.Direction.FORWARD);
+        leftMotor.setDirection(DcMotor.Direction.FORWARD);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
         leftShooter.setDirection(DcMotor.Direction.REVERSE);
         rightShooter.setDirection(DcMotor.Direction.FORWARD);
 
@@ -46,8 +46,8 @@ public class HardwareTest
         rightShooter.setPower(0);
         // rotatingServo.setPosition(0.2);
 
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }

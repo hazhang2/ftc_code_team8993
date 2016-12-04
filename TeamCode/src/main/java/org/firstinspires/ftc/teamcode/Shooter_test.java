@@ -34,49 +34,47 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Motor Test", group="Test")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Shooter Test", group="Test")
 // @Disabled
-public class Motor_test extends LinearOpMode {
+public class Shooter_test extends LinearOpMode {
 
     HardwareTest robot           = new HardwareTest();
 
     // double          clawOffset      = 0;
     // public static final double    ARM_EXTENDED_POSITION       = 0.08 ;
     // public static final double    ARM_RETRACTED_POSITION      = 0.02 ;
+    public static final double SHOOTER_ACC_INC=0.1;
+    public static final int SHOOTER_IACC_TICK=100;
+    public static final int SHOOTER_IACC_TICK_MAX=900;
 
     @Override
     public void runOpMode() throws InterruptedException {
         double leftMotorPower;
         double rightMotorPower;
-        // double rightShooterPower;
-        // double leftShooterPower;
-        // double rotatingServo;
 
         robot.init(hardwareMap);
 
-        telemetry.addData("Say", "Hello Person!");
+        telemetry.addData("Say", "Shooter Test");
         telemetry.update();
 
         waitForStart();
         int iaccelarate=0;
-        double shooterpower=0;
+        double shooterPower=0;
 
         while (opModeIsActive()) {
 
-//            robot.rightShooter.setPower(0.1);
-
-            if(iaccelarate%100==0)
+            if(iaccelarate%SHOOTER_IACC_TICK==0)
             {
-                int dd=iaccelarate/100;
-                shooterpower=dd*0.1+0.1;
-                telemetry.addData("Say","shooterpower increase to "+Double.toString(shooterpower));
+                int dd=iaccelarate/SHOOTER_IACC_TICK;
+                shooterPower=dd*SHOOTER_ACC_INC+SHOOTER_ACC_INC;
+                telemetry.addData("Say","shooterpower increase to "+Double.toString(shooterPower));
                 telemetry.update();
-                robot.leftShooter.setPower(shooterpower);
-                robot.rightShooter.setPower(shooterpower);
+                robot.leftShooter.setPower(shooterPower);
+                robot.rightShooter.setPower(shooterPower);
             }
-            if(iaccelarate<900)
+            if(iaccelarate<SHOOTER_IACC_TICK_MAX)
             {
-                iaccelarate++;
+                iaccelarate=iaccelarate+2;
             }
 
 //            rightMotorPower = -gamepad1.right_stick_y;

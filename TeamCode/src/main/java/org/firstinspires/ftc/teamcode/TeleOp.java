@@ -43,18 +43,18 @@ public class TeleOp extends LinearOpMode {
     // double          clawOffset      = 0;
     // public static final double    ARM_EXTENDED_POSITION       = 0.08 ;
     // public static final double    ARM_RETRACTED_POSITION      = 0.02 ;
+    public static final double MOTOR_ACC_INC=0.05;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        double leftMotorPower;
-        double rightMotorPower;
-        // double rightShooterPower;
-        // double leftShooterPower;
-        // double rotatingServo;
+        double leftMotorPower=0.0;
+        double rightMotorPower=0.0;
+        double leftMoterPowerb4=0.0;
+        double rightMoterPowerb4=0.0;
 
         robot.init(hardwareMap);
 
-        telemetry.addData("Say", "Hello Person!");
+        telemetry.addData("Say", "Tele Op");
         telemetry.update();
 
         waitForStart();
@@ -65,23 +65,47 @@ public class TeleOp extends LinearOpMode {
            // {
            //     robot.rotatingServo.setPosition(ARM_EXTENDED_POSITION);
            // }
-            rightMotorPower = -gamepad1.right_stick_y;
-            leftMotorPower  = -gamepad1.left_stick_y;
+
+            if(Math.abs(gamepad1.right_stick_y-rightMoterPowerb4) > MOTOR_ACC_INC)
+            {
+                if(gamepad1.right_stick_y > rightMoterPowerb4) {
+                    rightMotorPower = rightMoterPowerb4 + MOTOR_ACC_INC;
+                }
+                else{
+                    rightMotorPower = rightMoterPowerb4 - MOTOR_ACC_INC;
+                }
+                rightMoterPowerb4=rightMotorPower;
+            }
+
+            if(Math.abs(gamepad1.left_stick_y-leftMoterPowerb4) > MOTOR_ACC_INC)
+            {
+                if(gamepad1.left_stick_y > leftMoterPowerb4) {
+                    leftMotorPower = leftMoterPowerb4 + MOTOR_ACC_INC;
+                }
+                else{
+                    leftMotorPower = leftMoterPowerb4 - MOTOR_ACC_INC;
+                }
+                leftMoterPowerb4=leftMotorPower;
+            }
+
             // rightShooterPower = -gamepad1.right_stick_y;
             // leftShooterPower = -gamepad1.left_stick_y;
 
-                robot.leftMotor.setPower(leftMotorPower);
-                robot.rightMotor.setPower(rightMotorPower);
-            if(gamepad1.a)
-            {
-                robot.rightShooter.setPower(1);
-                robot.leftShooter.setPower(1);
-            }
-            if(gamepad1.b)
-            {
-                robot.rightShooter.setPower(0);
-                robot.leftShooter.setPower(0);
-            }
+            robot.leftMotor.setPower(leftMotorPower);
+            robot.rightMotor.setPower(rightMotorPower);
+            telemetry.addData("Say", "Moter power (left,right),"+Double.toString(leftMotorPower)+
+                    ","+Double.toString(rightMotorPower));
+            telemetry.update();
+//            if(gamepad1.a)
+//            {
+//                robot.rightShooter.setPower(1);
+//                robot.leftShooter.setPower(1);
+//            }
+//            if(gamepad1.b)
+//            {
+//                robot.rightShooter.setPower(0);
+//                robot.leftShooter.setPower(0);
+//            }
                 // robot.leftShooter.getCurrentPosition();
                 // robot.rightShooter.getCurrentPosition();
 
