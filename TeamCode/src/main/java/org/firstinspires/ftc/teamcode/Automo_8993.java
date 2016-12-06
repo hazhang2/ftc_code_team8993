@@ -34,21 +34,25 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="Autonomous Test", group="Test")
 // @Disabled
 public class Automo_8993 extends LinearOpMode {
 
     HardwareTest robot           = new HardwareTest();
+    static final double     DRIVE_SPEED             = 0.6;
+    private ElapsedTime runtime = new ElapsedTime();
+    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    public static final double MOTOR_ACC_INC=0.05;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        double leftMotorPower=0.0;
-        double rightMotorPower=0.0;
-        double leftMoterPowerb4=0.0;
-        double rightMoterPowerb4=0.0;
 
         robot.init(hardwareMap);
 
@@ -57,38 +61,66 @@ public class Automo_8993 extends LinearOpMode {
 
         waitForStart();
 
-        while (opModeIsActive()) {
+        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+    }
 
+    /*
+ *  Method to perfmorm a relative move, based on encoder counts.
+ *  Encoders are not reset as the move is based on the current position.
+ *  Move will stop if any of three conditions occur:
+ *  1) Move gets to the desired position
+ *  2) Move runs out of time
+ *  3) Driver stops the opmode running.
+ */
+    public void encoderDrive(double speed,
+                             double leftInches, double rightInches,
+                             double timeoutS) throws InterruptedException {
+        int newLeftTarget;
+        int newRightTarget;
 
-            if(Math.abs(gamepad1.right_stick_y-rightMoterPowerb4) > MOTOR_ACC_INC)
-            {
-                if(gamepad1.right_stick_y > rightMoterPowerb4) {
-                    rightMotorPower = rightMoterPowerb4 + MOTOR_ACC_INC;
-                }
-                else{
-                    rightMotorPower = rightMoterPowerb4 - MOTOR_ACC_INC;
-                }
-                rightMoterPowerb4=rightMotorPower;
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newLeftTarget = robot.leftMotor.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newRightTarget = robot.rightMotor.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            robot.leftMotor.setTargetPosition(newLeftTarget);
+            robot.rightMotor.setTargetPosition(newRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            robot.leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            robot.leftMotor.setPower(Math.abs(speed));
+            robot.rightMotor.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            while (opModeIsActive() &&
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.leftMotor.isBusy() && robot.rightMotor.isBusy())) {
+
+                // Display it for the driver.
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
+                        robot.leftMotor.getCurrentPosition(),
+                        robot.rightMotor.getCurrentPosition());
+                telemetry.update();
+
+                // Allow time for other processes to run.
+                idle();
             }
 
-            if(Math.abs(gamepad1.left_stick_y-leftMoterPowerb4) > MOTOR_ACC_INC)
-            {
-                if(gamepad1.left_stick_y > leftMoterPowerb4) {
-                    leftMotorPower = leftMoterPowerb4 + MOTOR_ACC_INC;
-                }
-                else{
-                    leftMotorPower = leftMoterPowerb4 - MOTOR_ACC_INC;
-                }
-                leftMoterPowerb4=leftMotorPower;
-            }
+            // Stop all motion;
+            robot.leftMotor.setPower(0);
+            robot.rightMotor.setPower(0);
 
-            robot.leftMotor.setPower(leftMotorPower);
-            robot.rightMotor.setPower(rightMotorPower);
-            telemetry.addData("Say", "Moter power (left,right),"+Double.toString(leftMotorPower)+
-                    ","+Double.toString(rightMotorPower));
-            telemetry.update();
+            // Turn off RUN_TO_POSITION
+            robot.leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            robot.waitForTick(40);
+            //  sleep(250);   // optional pause after each move
         }
     }
 }

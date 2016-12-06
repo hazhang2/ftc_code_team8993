@@ -12,7 +12,7 @@ public class HardwareTest
     public DcMotor  rightMotor    = null;
     public DcMotor  leftShooter   = null;
     public DcMotor  rightShooter  = null;
-    // public Servo    rotatingServo = null;
+    // public Servo    highServo = null;
 
     // public static final double MID_SERVO       =  0.5 ;
     // public static final double ARM_UP_POWER    =  0.45 ;
@@ -30,24 +30,28 @@ public class HardwareTest
 
         rightMotor   = hwMap.dcMotor.get("motor_1");
         leftMotor  = hwMap.dcMotor.get("motor_2");
+
         leftShooter  = hwMap.dcMotor.get("motor_3");
         rightShooter  = hwMap.dcMotor.get("motor_4");
-        // rotatingServo = hwMap.servo.get("servo_1");
+
+        // highServo = hwMap.servo.get("servo_1");
 
 
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
+
         leftShooter.setDirection(DcMotor.Direction.REVERSE);
         rightShooter.setDirection(DcMotor.Direction.FORWARD);
 
         leftMotor.setPower(0);
         rightMotor.setPower(0);
+
         leftShooter.setPower(0);
         rightShooter.setPower(0);
-        // rotatingServo.setPosition(0.2);
 
         leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         leftShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightShooter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
