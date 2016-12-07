@@ -12,7 +12,7 @@ public class HardwareTest
     public DcMotor  rightMotor    = null;
     public DcMotor  leftShooter   = null;
     public DcMotor  rightShooter  = null;
-    // public Servo    highServo = null;
+    public Servo    ballPusherServo = null;
 
     // public static final double MID_SERVO       =  0.5 ;
     // public static final double ARM_UP_POWER    =  0.45 ;
@@ -34,7 +34,7 @@ public class HardwareTest
         leftShooter  = hwMap.dcMotor.get("motor_3");
         rightShooter  = hwMap.dcMotor.get("motor_4");
 
-        // highServo = hwMap.servo.get("servo_1");
+        ballPusherServo = hwMap.servo.get("servo_1");
 
 
         leftMotor.setDirection(DcMotor.Direction.FORWARD);

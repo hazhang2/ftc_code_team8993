@@ -43,12 +43,17 @@ public class Automo_8993 extends LinearOpMode {
 
     HardwareTest robot           = new HardwareTest();
     static final double     DRIVE_SPEED             = 0.6;
+    static final double     TURN_SPEED              = 0.5;
     private ElapsedTime runtime = new ElapsedTime();
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    static final double     COUNTS_PER_MOTOR_REV    = 720 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
+
+    public static final double    BALL_PUSHER_POSITION_HIGH       = 0.4 ;
+    public static final double    BALL_PUSHER_POSITION_LOW      = 0. ;
+
 
 
     @Override
@@ -58,10 +63,17 @@ public class Automo_8993 extends LinearOpMode {
 
         telemetry.addData("Say", "Autonomous Test");
         telemetry.update();
+        robot.ballPusherServo.setPosition(BALL_PUSHER_POSITION_LOW);
 
         waitForStart();
 
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDrive(DRIVE_SPEED,  10,  10, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        robot.waitForTick(1000);
+        robot.ballPusherServo.setPosition(BALL_PUSHER_POSITION_HIGH);
+        robot.waitForTick(1000);
+        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Left 12 Inches with 4 Sec timeout
+        robot.waitForTick(1000);
+        encoderDrive(DRIVE_SPEED, 10, 10, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
     }
 
     /*

@@ -44,6 +44,7 @@ public class TeleOp extends LinearOpMode {
     // public static final double    ARM_EXTENDED_POSITION       = 0.08 ;
     // public static final double    ARM_RETRACTED_POSITION      = 0.02 ;
     public static final double MOTOR_ACC_INC=0.05;
+    public static final double SPEED_FACTOR=1.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -66,9 +67,9 @@ public class TeleOp extends LinearOpMode {
            //     robot.rotatingServo.setPosition(ARM_EXTENDED_POSITION);
            // }
 
-            if(Math.abs(gamepad1.right_stick_y-rightMoterPowerb4) > MOTOR_ACC_INC)
+            if(Math.abs(gamepad1.right_stick_y-rightMoterPowerb4*SPEED_FACTOR) > MOTOR_ACC_INC)
             {
-                if(gamepad1.right_stick_y > rightMoterPowerb4) {
+                if(gamepad1.right_stick_y > rightMoterPowerb4*SPEED_FACTOR) {
                     rightMotorPower = rightMoterPowerb4 + MOTOR_ACC_INC;
                 }
                 else{
@@ -77,9 +78,9 @@ public class TeleOp extends LinearOpMode {
                 rightMoterPowerb4=rightMotorPower;
             }
 
-            if(Math.abs(gamepad1.left_stick_y-leftMoterPowerb4) > MOTOR_ACC_INC)
+            if(Math.abs(gamepad1.left_stick_y-leftMoterPowerb4*SPEED_FACTOR) > MOTOR_ACC_INC)
             {
-                if(gamepad1.left_stick_y > leftMoterPowerb4) {
+                if(gamepad1.left_stick_y > leftMoterPowerb4*SPEED_FACTOR) {
                     leftMotorPower = leftMoterPowerb4 + MOTOR_ACC_INC;
                 }
                 else{
@@ -91,8 +92,8 @@ public class TeleOp extends LinearOpMode {
             // rightShooterPower = -gamepad1.right_stick_y;
             // leftShooterPower = -gamepad1.left_stick_y;
 
-            robot.leftMotor.setPower(leftMotorPower);
-            robot.rightMotor.setPower(rightMotorPower);
+            robot.leftMotor.setPower(-leftMotorPower);
+            robot.rightMotor.setPower(-rightMotorPower);
             telemetry.addData("Say", "Moter power (left,right),"+Double.toString(leftMotorPower)+
                     ","+Double.toString(rightMotorPower));
             telemetry.update();
