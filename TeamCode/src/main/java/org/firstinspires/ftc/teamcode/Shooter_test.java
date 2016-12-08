@@ -74,7 +74,7 @@ public class Shooter_test extends LinearOpMode {
             }
             if(iaccelarate<SHOOTER_IACC_TICK_MAX)
             {
-                iaccelarate=iaccelarate+2;
+                iaccelarate=iaccelarate+4;
             }
 
 //            rightMotorPower = -gamepad1.right_stick_y;

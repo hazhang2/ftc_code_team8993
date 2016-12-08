@@ -51,9 +51,13 @@ public class Automo_8993 extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    public static final double    BALL_PUSHER_POSITION_HIGH       = 0.4 ;
+    public static final double    BALL_PUSHER_POSITION_HIGH       = 0.35 ;
+    public static final double    BALL_PUSHER_POSITION_MIDDLE       = 0.2 ;
     public static final double    BALL_PUSHER_POSITION_LOW      = 0. ;
 
+    public static final double SHOOTER_ACC_INC=0.1;
+    public static final int SHOOTER_IACC_TICK=100;
+    public static final int SHOOTER_IACC_TICK_MAX=900;
 
 
     @Override
@@ -63,17 +67,22 @@ public class Automo_8993 extends LinearOpMode {
 
         telemetry.addData("Say", "Autonomous Test");
         telemetry.update();
-        robot.ballPusherServo.setPosition(BALL_PUSHER_POSITION_LOW);
+        robot.ballPusherServo.setPosition(BALL_PUSHER_POSITION_MIDDLE);
 
         waitForStart();
 
-        encoderDrive(DRIVE_SPEED,  10,  10, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        robot.waitForTick(1000);
+        startShooter();
+        robot.waitForTick(2000);
+
+        encoderDrive(DRIVE_SPEED,  1.8,  1.8, 5.0);  // S1: Forward 1.8 Inches with 5 Sec timeout
+        robot.waitForTick(2000);
         robot.ballPusherServo.setPosition(BALL_PUSHER_POSITION_HIGH);
         robot.waitForTick(1000);
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Left 12 Inches with 4 Sec timeout
-        robot.waitForTick(1000);
-        encoderDrive(DRIVE_SPEED, 10, 10, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        stopShooter();
+        encoderDrive(DRIVE_SPEED, 7, 7, 4.0);
+        encoderDrive(TURN_SPEED,   15, -15, 4.0);  // S2: Turn Left 12 Inches with 4 Sec timeout
+        robot.waitForTick(2000);
+        encoderDrive(DRIVE_SPEED, 43, 43, 4.0);  // S3: Reverse 20 Inches with 4 Sec timeout
     }
 
     /*
@@ -134,5 +143,30 @@ public class Automo_8993 extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
+    }
+
+    public void startShooter() throws InterruptedException {
+
+        int ispeed=0;
+        double shooterPower;
+
+        while(ispeed <= SHOOTER_IACC_TICK_MAX) {
+
+            int dd = ispeed / SHOOTER_IACC_TICK;
+            shooterPower = dd * SHOOTER_ACC_INC + SHOOTER_ACC_INC;
+            telemetry.addData("Say", "shooterpower increase to " + Double.toString(shooterPower));
+            telemetry.update();
+            robot.leftShooter.setPower(shooterPower);
+            robot.rightShooter.setPower(shooterPower);
+
+            ispeed = ispeed + 4;
+            robot.waitForTick(40);
+        }
+    }
+
+    public void stopShooter()
+    {
+        robot.leftShooter.setPower(0);
+        robot.rightShooter.setPower(0);
     }
 }
