@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 // @Disabled
 public class Automo_8993 extends LinearOpMode {
 
-    HardwareTest robot           = new HardwareTest();
+    Hardware5Motors robot           = new Hardware5Motors();
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
     private ElapsedTime runtime = new ElapsedTime();
@@ -51,9 +51,11 @@ public class Automo_8993 extends LinearOpMode {
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
 
-    public static final double    BALL_PUSHER_POSITION_HIGH       = 0.35 ;
-    public static final double    BALL_PUSHER_POSITION_MIDDLE       = 0.2 ;
+    public static final double    BALL_PUSHER_POSITION_HIGH       = 0.25 ;
+    public static final double    BALL_PUSHER_POSITION_MIDDLE       = 0. ;
     public static final double    BALL_PUSHER_POSITION_LOW      = 0. ;
+    public static final double    BALL_PUSHER_POSITION_INC  = 0.01;
+
 
     public static final double SHOOTER_ACC_INC=0.1;
     public static final int SHOOTER_IACC_TICK=100;
@@ -68,6 +70,8 @@ public class Automo_8993 extends LinearOpMode {
         telemetry.addData("Say", "Autonomous Test");
         telemetry.update();
         robot.ballPusherServo.setPosition(BALL_PUSHER_POSITION_MIDDLE);
+        double currentPos = BALL_PUSHER_POSITION_MIDDLE;
+
 
         waitForStart();
 
@@ -75,7 +79,11 @@ public class Automo_8993 extends LinearOpMode {
         robot.waitForTick(2000);
 
         encoderDrive(DRIVE_SPEED,  1.8,  1.8, 5.0);  // S1: Forward 1.8 Inches with 5 Sec timeout
-        robot.waitForTick(2000);
+        robot.waitForTick(1000);
+//        if(currentPos < BALL_PUSHER_POSITION_HIGH) {
+//            currentPos = currentPos + BALL_PUSHER_POSITION_INC;
+//            robot.ballPusherServo.setPosition(currentPos);
+//        }
         robot.ballPusherServo.setPosition(BALL_PUSHER_POSITION_HIGH);
         robot.waitForTick(1000);
         stopShooter();
