@@ -34,17 +34,25 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp 2", group="Test")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp", group="Test")
 // @Disabled
 public class TeleOp extends LinearOpMode {
 
-    HardwareTest robot           = new HardwareTest();
+    Hardware5Motors robot           = new Hardware5Motors();
 
     // double          clawOffset      = 0;
     // public static final double    ARM_EXTENDED_POSITION       = 0.08 ;
     // public static final double    ARM_RETRACTED_POSITION      = 0.02 ;
     public static final double MOTOR_ACC_INC=0.05;
-    public static final double SPEED_FACTOR=1.5;
+    public static final double SPEED_FACTOR=2.5;
+    public static final double SHOOTER_ACC_INC=0.1;
+    public static final int SHOOTER_IACC_TICK=100;
+    public static final int SHOOTER_IACC_TICK_MAX=900;
+    public static final double    BALL_PUSHER_POSITION_HIGH       = 0.25 ;
+    public static final double    BALL_PUSHER_POSITION_MIDDLE       = 0. ;
+    public static final double    BALL_PUSHER_POSITION_LOW      = 0. ;
+    public static final double    BALL_PUSHER_POSITION_INC  = 0.01;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -59,14 +67,49 @@ public class TeleOp extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
+        double iaccelarate=0;
+        double shooterPower=0;
+        boolean bShooterOn=false;
+        double currentPos= BALL_PUSHER_POSITION_MIDDLE;
 
         while (opModeIsActive()) {
 
-           // if(gamepad1.a)
-           // {
-           //     robot.rotatingServo.setPosition(ARM_EXTENDED_POSITION);
-           // }
+            // shooter controls
 
+            if(gamepad2.x)
+            {
+                bShooterOn=true;
+            }
+
+            if(gamepad2.y)
+            {
+                bShooterOn=false;
+            }
+
+            if(bShooterOn) {
+               // if (iaccelarate % SHOOTER_IACC_TICK == 0) {
+                    double dd = iaccelarate / SHOOTER_IACC_TICK;
+                    shooterPower = dd * SHOOTER_ACC_INC + SHOOTER_ACC_INC;
+                    telemetry.addData("Say", "shooterpower increase to " + Double.toString(shooterPower));
+                    telemetry.update();
+                    robot.leftShooter.setPower(shooterPower);
+                    robot.rightShooter.setPower(shooterPower);
+               // }
+                if (iaccelarate < SHOOTER_IACC_TICK_MAX) {
+                    iaccelarate = iaccelarate + 4;
+                }
+                else{
+                    iaccelarate = SHOOTER_IACC_TICK_MAX;
+                }
+            }
+            else
+            {
+                iaccelarate = 0;
+                robot.leftShooter.setPower(0);
+                robot.rightShooter.setPower(0);
+            }
+
+            // driver controls
             if(Math.abs(gamepad1.right_stick_y-rightMoterPowerb4*SPEED_FACTOR) > MOTOR_ACC_INC)
             {
                 if(gamepad1.right_stick_y > rightMoterPowerb4*SPEED_FACTOR) {
@@ -88,15 +131,38 @@ public class TeleOp extends LinearOpMode {
                 }
                 leftMoterPowerb4=leftMotorPower;
             }
-
-            // rightShooterPower = -gamepad1.right_stick_y;
-            // leftShooterPower = -gamepad1.left_stick_y;
-
             robot.leftMotor.setPower(-leftMotorPower);
             robot.rightMotor.setPower(-rightMotorPower);
-            telemetry.addData("Say", "Moter power (left,right),"+Double.toString(leftMotorPower)+
-                    ","+Double.toString(rightMotorPower));
-            telemetry.update();
+//            telemetry.addData("Say", "Moter power (left,right),"+Double.toString(leftMotorPower)+
+//                    ","+Double.toString(rightMotorPower));
+//            telemetry.update();
+
+            // ball picker controls
+            if(gamepad2.a) {
+                robot.ballPicker.setPower(0.1);
+            }
+
+            if(gamepad2.b) {
+                robot.ballPicker.setPower(0.);
+            }
+
+            // ball pusher controls
+            if(gamepad1.a)
+            {
+//                if(currentPos < BALL_PUSHER_POSITION_HIGH) {
+//                    currentPos = currentPos + BALL_PUSHER_POSITION_INC;
+//                    robot.ballPusherServo.setPosition(currentPos);
+//                }
+                robot.ballPusherServo.setPosition(BALL_PUSHER_POSITION_HIGH);
+            }
+
+            if(gamepad1.b)
+            {
+                robot.ballPusherServo.setPosition(BALL_PUSHER_POSITION_MIDDLE);
+                currentPos = BALL_PUSHER_POSITION_MIDDLE;
+            }
+
+
 //            if(gamepad1.a)
 //            {
 //                robot.rightShooter.setPower(1);

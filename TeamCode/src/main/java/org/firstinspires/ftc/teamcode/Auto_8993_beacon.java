@@ -31,6 +31,7 @@ import java.util.List;
  */
 
 @Autonomous(name = "Vuforia")
+@Disabled
 public class Auto_8993_beacon extends LinearOpMode {
 
     ImageView display;

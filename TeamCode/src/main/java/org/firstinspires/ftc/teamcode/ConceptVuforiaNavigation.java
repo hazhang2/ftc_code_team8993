@@ -85,7 +85,7 @@ import java.util.List;
  */
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Vuforia Test", group ="Concept")
-//@Disabled
+@Disabled
 public class ConceptVuforiaNavigation extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";

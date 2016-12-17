@@ -33,6 +33,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.ftcrobotcontroller.R;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 import com.vuforia.PIXEL_FORMAT;
@@ -85,7 +86,7 @@ import java.util.List;
  */
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Vuforia Test", group ="Concept")
-//@Disabled
+@Disabled
 public class beacon_push extends LinearOpMode {
 
     public static final String TAG = "Vuforia Sample";
@@ -128,7 +129,7 @@ public class beacon_push extends LinearOpMode {
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         Vuforia.setFrameFormat(PIXEL_FORMAT.RGB565, true);
-        this.vuforia.setFrameQueueCapacity(1);
+//        this.vuforia.setFrameQueueCapacity(1);
 
         /**
          * Load the data sets that for the trackable objects we wish to track. These particular data

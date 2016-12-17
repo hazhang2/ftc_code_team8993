@@ -32,13 +32,18 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="Shooter Test", group="Test")
-// @Disabled
+//@Disabled
 public class Shooter_test extends LinearOpMode {
 
-    HardwareTest robot           = new HardwareTest();
+    Hardware5Motors robot           = new Hardware5Motors();
+    public static final double    BALL_PUSHER_POSITION_HIGH       = 0.5 ;
+    public static final double    BALL_PUSHER_POSITION_MIDDLE       = 0.2 ;
+    public static final double    BALL_PUSHER_POSITION_LOW      = 0. ;
+    public static final double    BALL_PUSHER_POSITION_INC  = 0.01;
 
     // double          clawOffset      = 0;
     // public static final double    ARM_EXTENDED_POSITION       = 0.08 ;
@@ -60,22 +65,44 @@ public class Shooter_test extends LinearOpMode {
         waitForStart();
         int iaccelarate=0;
         double shooterPower=0;
+        double currentPos = BALL_PUSHER_POSITION_MIDDLE;
 
         while (opModeIsActive()) {
 
-            if(iaccelarate%SHOOTER_IACC_TICK==0)
-            {
-                int dd=iaccelarate/SHOOTER_IACC_TICK;
-                shooterPower=dd*SHOOTER_ACC_INC+SHOOTER_ACC_INC;
-                telemetry.addData("Say","shooterpower increase to "+Double.toString(shooterPower));
-                telemetry.update();
-                robot.leftShooter.setPower(shooterPower);
-                robot.rightShooter.setPower(shooterPower);
+            if(gamepad2.a) {
+                robot.ballPicker.setPower(0.1);
             }
-            if(iaccelarate<SHOOTER_IACC_TICK_MAX)
-            {
-                iaccelarate=iaccelarate+4;
+
+            if(gamepad2.b) {
+                robot.ballPicker.setPower(0.);
             }
+
+            if(gamepad1.a)
+            {
+                if(currentPos < BALL_PUSHER_POSITION_HIGH) {
+                    currentPos = currentPos + BALL_PUSHER_POSITION_INC;
+                    robot.ballPusherServo.setPosition(currentPos);
+                }
+            }
+
+            if(gamepad1.b)
+            {
+                robot.ballPusherServo.setPosition(BALL_PUSHER_POSITION_MIDDLE);
+                currentPos = BALL_PUSHER_POSITION_MIDDLE;
+            }
+//            if(iaccelarate%SHOOTER_IACC_TICK==0)
+//            {
+//                int dd=iaccelarate/SHOOTER_IACC_TICK;
+//                shooterPower=dd*SHOOTER_ACC_INC+SHOOTER_ACC_INC;
+//                telemetry.addData("Say","shooterpower increase to "+Double.toString(shooterPower));
+//                telemetry.update();
+//                robot.leftShooter.setPower(shooterPower);
+//                robot.rightShooter.setPower(shooterPower);
+//            }
+//            if(iaccelarate<SHOOTER_IACC_TICK_MAX)
+//            {
+//                iaccelarate=iaccelarate+4;
+//            }
 
 //            rightMotorPower = -gamepad1.right_stick_y;
 //            leftMotorPower  = -gamepad1.left_stick_y;
